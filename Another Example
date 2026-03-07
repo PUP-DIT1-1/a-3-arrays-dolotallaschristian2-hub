@@ -1,0 +1,26 @@
+package com.mycompany.arraybubble;
+import java.util.*;
+public class Searchlist {
+    
+    static Scanner sc = new Scanner (System.in);
+    public static void main (String [] args){
+        int [] numbers = {1,4,2,9,5,8,7,6,3};
+        int target;
+        
+        System.out.println("Enter your Number");
+        target = sc.nextInt();
+        
+        boolean found = false;
+        for(int i = 0; i < numbers.length; i++){
+            if(target == numbers[i]){
+                System.out.println("Element found index: " + i);
+                found = true;
+                break;
+                
+            }
+        }
+        if(!found){
+            System.out.println("Element not found in the array");
+        }
+    }
+}
