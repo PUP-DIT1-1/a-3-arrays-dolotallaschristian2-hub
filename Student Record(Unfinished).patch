@@ -15,8 +15,8 @@ package com.mycompany.arraybubble;
 import java.util.*;
 
 public class A3 {
-    static boolean swapped = false;
-    static boolean stop = false;
+    static boolean swapped = false;//Sorts
+    static boolean stop = false;//Exit
     static Scanner sc = new Scanner (System.in);
     static String name[][] = {// Grades sored in Array
         { "Jex"}, {"Kiel"},{"Enzo"},{"Kyle"},{"Dwight"},{"Joseph"},{"Paul"},{"Sean"},{"Russel"},{"Chester"}};
@@ -101,7 +101,7 @@ public class A3 {
                      }             
                      break;
                  case 4:
-                 System.out.println("Thank you for using the Student Record)
+                 System.out.println("Thank you for using the Student Record");
                      stop = true;
                      break;
                  default:
