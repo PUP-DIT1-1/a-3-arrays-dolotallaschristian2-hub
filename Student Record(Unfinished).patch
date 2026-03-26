@@ -1,72 +1,42 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+# INPUT
+students = int(input("Enter number of students: "))
+grades_count = int(input("Enter number of grades per student: "))
 
-public class Leap {
+records = []
 
-    public static void main(String[] args) throws IOException {
+for i in range(students):
+    name = input("\nStudent name: ")
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    student_grades = []
+    total = 0
 
-        System.out.print("Enter number of students: ");
-        int students = Integer.parseInt(br.readLine());
+    for j in range(grades_count):
+        grade = int(input(f"Grade {j + 1}: "))
+        student_grades.append(grade)
+        total += grade
 
-        System.out.print("Enter number of grades per student: ");
-        int gradesCount = Integer.parseInt(br.readLine());
+    avg = total / grades_count
+    records.append((name, student_grades, avg))
 
-        String[][] student = new String[students][gradesCount + 1];
-        double[] average = new double[students];
+# SORT (Descending by average)
+records.sort(key=lambda x: x[2], reverse=True)
 
-        // INPUT
-        for (int i = 0; i < students; i++) {
+# OUTPUT
+print("\nSorted Student Records (Highest to Lowest):")
+for name, grades, avg in records:
+    print(name, "-", *grades, f"| Average: {avg:.2f}")
 
-            System.out.print("\nStudent name: ");
-            student[i][0] = br.readLine();
+# 🔍 SEARCH FUNCTION
+search_name = input("\nEnter student name to search: ")
 
-            double sum = 0;
+found = False
 
-            for (int j = 1; j <= gradesCount; j++) {
-                System.out.print("Grade " + j + ": ");
-                int grade = Integer.parseInt(br.readLine());
+for name, grades, avg in records:
+    if name.lower() == search_name.lower():  # case-insensitive
+        print("\nStudent Found:")
+        print(name, "-", *grades, f"| Average: {avg:.2f}")
+        found = True
+        break
 
-                student[i][j] = String.valueOf(grade);
-                sum += grade;
-            }
-
-            average[i] = sum / gradesCount;
-        }
-
-        // SORT (Descending by average)
-        for (int i = 0; i < students - 1; i++) {
-            for (int j = i + 1; j < students; j++) {
-
-                if (average[i] < average[j]) {
-
-                    // swap averages
-                    double tempAvg = average[i];
-                    average[i] = average[j];
-                    average[j] = tempAvg;
-
-                    // swap entire student row
-                    String[] tempRow = student[i];
-                    student[i] = student[j];
-                    student[j] = tempRow;
-                }
-            }
-        }
-
-        // OUTPUT
-        System.out.println("\nSorted Student Records (Highest to Lowest):");
-
-        for (int i = 0; i < students; i++) {
-
-            System.out.print(student[i][0] + " - ");
-
-            for (int j = 1; j <= gradesCount; j++) {
-                System.out.print(student[i][j] + " ");
-            }
-
-            System.out.printf(" | Average: %.2f\n", average[i]);
-        }
-    }
-}
+if not found:
+    print("Student not found.")
