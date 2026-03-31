@@ -1,127 +1,139 @@
 FILE_NAME = "students.txt"
 
-# ---------------- FILE HANDLING ----------------
+# ---------- FILE HANDLING ----------
 def load_data():
-    records = []
+    students = []
+
     try:
-        with open(FILE_NAME, "r") as f:
-            for line in f:
-                line = line.strip()
+        with open(FILE_NAME, "r") as file:
+            for line in file:
+
                 if line:
-                    name, grades_str, avg = line.split("|")
-                    grades = list(map(int, grades_str.split(",")))
-                    records.append({
+                    name, grades_text, avg = line.split("|")
+                    grades = [int(g) for g in grades_text.split(",")]
+
+                    students.append({
                         "name": name,
                         "grades": grades,
-                        "avg": float(avg)
+                        "average": float(avg)
                     })
+
     except FileNotFoundError:
         pass
-    return records
+
+    return students
 
 
-def save_data(records):
-    with open(FILE_NAME, "w") as f:
-        for student in records:
-            grades_str = ",".join(map(str, student["grades"]))
-            line = f"{student['name']}|{grades_str}|{student['avg']}\n"
-            f.write(line)
+def save_data(students):
+    with open(FILE_NAME, "w") as file:
+        for student in students:
+            grades_text = ",".join(map(str, student["grades"]))
+            line = f"{student['name']}|{grades_text}|{student['average']}\n"
+            file.write(line)
 
 
-# ---------------- ADD STUDENT ----------------
-def add_student(records):
-    name = input("\nStudent name: ")
+# ---------- ADD STUDENT ----------
+def add_student(students):
+    print("\n--- Add New Student ---")
+    name = input("Enter student name: ")
 
-    grades_count = int(input("Enter number of grades: "))
-    student_grades = []
-    total = 0
+    num_grades = int(input("How many grades? "))
+    grades = []
 
-    for i in range(grades_count):
-        grade = int(input(f"Grade {i + 1}: "))
-        student_grades.append(grade)
-        total += grade
+    for i in range(num_grades):
+        grade = int(input(f"Enter grade #{i + 1}: "))
+        grades.append(grade)
 
-    avg = total / grades_count
-    records.append({"name": name, "grades": student_grades, "avg": avg})
+    average = sum(grades) / num_grades
 
-    print("Student added successfully!")
+    students.append({
+        "name": name,
+        "grades": grades,
+        "average": average
+    })
+
+    print("Student successfully added!\n")
 
 
-# ---------------- VIEW STUDENTS ----------------
-def view_students(records):
-    if not records:
-        print("\nNo records found.")
+# ---------- VIEW STUDENTS ----------
+def view_students(students):
+    if not students:
+        print("\nNo student records yet.\n")
         return
 
-    sorted_records = sorted(records, key=lambda x: x["avg"], reverse=True)
+    print("\n--- Student Records (Sorted by Average) ---")
 
-    print("\nStudent Records (Highest to Lowest):")
-    for student in sorted_records:
-        print(student["name"], "-", *student["grades"], f"| Average: {student['avg']:.2f}")
+    sorted_list = sorted(students, key=lambda s: s["average"], reverse=True)
+
+    for student in sorted_list:
+        grades_display = " ".join(map(str, student["grades"]))
+        print(f"{student['name']} - {grades_display} | Avg: {student['average']:.2f}")
+
+    print()
 
 
-# ---------------- SEARCH ----------------
-def search_student(records):
-    search_name = input("\nEnter student name to search: ")
+# ---------- SEARCH STUDENT ----------
+def search_student(students):
+    name = input("\nEnter name to search: ")
 
-    for student in records:
-        if student["name"].lower() == search_name.lower():
+    for student in students:
+        if student["name"].lower() == name.lower():
             print("\nStudent Found:")
-            print(student["name"], "-", *student["grades"], f"| Average: {student['avg']:.2f}")
+            print(f"{student['name']} - {' '.join(map(str, student['grades']))} | Avg: {student['average']:.2f}")
             return
 
-    print("Student not found.")
+    print("Student not found.\n")
 
 
-# ---------------- REMOVE ----------------
-def remove_student(records):
-    name_to_remove = input("\nEnter student name to remove: ")
+# ---------- REMOVE STUDENT ----------
+def remove_student(students):
+    name = input("\nEnter name to remove: ")
 
-    for student in records:
-        if student["name"].lower() == name_to_remove.lower():
-            records.remove(student)
-            print("Student removed successfully!")
+    for student in students:
+        if student["name"].lower() == name.lower():
+            students.remove(student)
+            print("Student removed successfully!\n")
             return
 
-    print("Student not found.")
+    print("Student not found.\n")
 
 
-# ---------------- MAIN MENU ----------------
+# ---------- MAIN PROGRAM ----------
 def main():
-    records = load_data()
+    students = load_data()
 
     while True:
-        print("\n===== MENU =====")
+        print("===== STUDENT MENU =====")
         print("1. Add Student")
         print("2. View Students")
         print("3. Search Student")
         print("4. Remove Student")
         print("5. Exit")
 
-        choice = input("Enter choice: ")
+        choice = input("Choose an option: ")
 
         if choice == "1":
-            add_student(records)
-            save_data(records)
+            add_student(students)
+            save_data(students)
 
         elif choice == "2":
-            view_students(records)
+            view_students(students)
 
         elif choice == "3":
-            search_student(records)
+            search_student(students)
 
         elif choice == "4":
-            remove_student(records)
-            save_data(records)
+            remove_student(students)
+            save_data(students)
 
         elif choice == "5":
-            save_data(records)
-            print("Data saved. Exiting...")
+            save_data(students)
+            print("Data saved. Goodbye!")
             break
 
         else:
-            print("Invalid choice. Try again.")
+            print("Invalid choice. Please try again.\n")
 
 
-# RUN PROGRAM
+# Run the program
 main()
